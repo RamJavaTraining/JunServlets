@@ -3,6 +3,7 @@ package com.imcs.training;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -10,10 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.imcs.model.UserBean;
+import com.imcs.service.UserService;
+
 /**
  * Servlet implementation class Servlet1
  */
 public class Servlet1 extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
 
     /**
@@ -43,6 +48,13 @@ public class Servlet1 extends HttpServlet {
 		print.write("<h1> Hello to "+userName+" From Request</h1>");
 		print.write("<h1> Hello to "+session.getAttribute("userName")+" From Session</h1>");
 		print.write("<h1> Hello to "+context.getAttribute("userName")+" From Context</h1>");
+		print.write("<h1> Hello to "+context.getAttribute("userName")+" From Context</h1>");
+		
+	
+		
+		
+		
+		
 		
 		//.append("Served at:GET ")
 		//.append(request.getContextPath());
@@ -60,6 +72,9 @@ public class Servlet1 extends HttpServlet {
 		
 	
 		UserService service = new UserService();
+		UserBean userBean= service.lookUpUser(userName);
+		
+		
 		HttpSession session = request.getSession();
 		ServletContext context = request.getServletContext();
 		if(userName!=null) {
@@ -69,7 +84,15 @@ public class Servlet1 extends HttpServlet {
 		print.write("<h1> Hello to "+userName+" From Request</h1>");
 		print.write("<h1> Hello to "+session.getAttribute("userName")+" From Session</h1>");
 		print.write("<h1> Hello to "+context.getAttribute("userName")+" From Context</h1>");
-		print.write("<h1> Hello to "+context.getAttribute("userName")+"Your User id is : "+ service.lookUpUser(userName)+"</h1>");
+		print.write("<h1> Hello to "+context.getAttribute("userName")+"Your User id is : "+userBean.getUserID()+"</h1>");
+		
+		
+		if(userBean!=null) {
+			//response.sendRedirect("Success.jsp");
+			request.setAttribute("user", userBean);
+			RequestDispatcher dispatcher=request.getRequestDispatcher("Success.jsp");
+			dispatcher.forward(request, response);
+		}
 		
 		
 		
